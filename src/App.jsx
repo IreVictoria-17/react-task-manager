@@ -28,7 +28,7 @@ function App() {
       <h1>React Task Manager 📝</h1>
       {/* Pasamos la función addTask como 'prop' al formulario */}
       <TaskForm addTask={addTask} />
-      <TaskList />
+      <TaskList tasks={tasks} />
     </div>
   )
 }

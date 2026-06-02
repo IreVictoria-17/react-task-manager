@@ -1,8 +1,10 @@
 // src/components/TaskItem.jsx
-function TaskItem() {
+// Recibimos el objeto 'task' individual por props
+function TaskItem({ task }) {
   return (
-    <div>
-      <h2>Elemento de tarea aquí</h2>
+    <div className="task-item">
+      {/* Mostramos el nombre de la tarea */}
+      <span>{task.name}</span>
     </div>
   )
 }
