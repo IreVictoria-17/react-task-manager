@@ -2,15 +2,33 @@
 import './App.css'
 import TaskList from './components/TaskList'
 import TaskForm from './components/TaskForm'
-import TaskItem from './components/TaskItem'
+import { useState} from 'react'
 
 function App() {
+  // COMENTARIO OBLIGATORIO: El estado principal vive aquí en App.jsx 
+  // porque varios componentes hijos (TaskForm y TaskList) necesitan acceder a esta información.
+  const [tasks, setTasks] = useState([])
+
+  // Función para agregar una nueva tarea
+  const addTask = (taskName) => {
+    const newTask = {
+      id: Date.now(), // Generamos un ID único basado en la fecha actual
+      name: taskName,
+      completed: false // Por defecto, una tarea nueva no está completada
+    }
+
+    // COMENTARIO OBLIGATORIO: Usamos setTasks porque en React el estado es inmutable.
+    // COMENTARIO OBLIGATORIO: No se usa push porque push muta el arreglo original directamente, 
+    // lo que impide que React detecte el cambio y vuelva a renderizar la pantalla.
+    setTasks([...tasks, newTask]) 
+  }
+
   return (
     <div className="app-container">
       <h1>React Task Manager 📝</h1>
-      <TaskForm />
+      {/* Pasamos la función addTask como 'prop' al formulario */}
+      <TaskForm addTask={addTask} />
       <TaskList />
-      <TaskItem />
     </div>
   )
 }
