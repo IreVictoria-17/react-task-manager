@@ -14,6 +14,9 @@ function TaskItem({ task, deleteTask, toggleComplete }) {
       {/* COMENTARIO OBLIGATORIO: Se usa onClick={() => ...} con una función flecha anónima
           para evitar que la función deleteTask se ejecute inmediatamente cuando el componente 
           se renderiza. De esta forma, aseguramos que solo se ejecute cuando el usuario haga clic. */}
+
+        {/* NUEVO: Agrega este <span> justo debajo del nombre de la tarea */}
+      <span> (Prioridad: {task.priority})</span>
       <button onClick={() => deleteTask(task.id)}>
         Eliminar
       </button>

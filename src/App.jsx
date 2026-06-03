@@ -10,10 +10,12 @@ function App() {
   const [tasks, setTasks] = useState([])
 
   // Función para agregar una nueva tarea
-  const addTask = (taskName) => {
+  // NUEVO: Agrega 'taskPriority' como segundo parámetro
+  const addTask = (taskName, taskPriority) => {
     const newTask = {
       id: Date.now(), // Generamos un ID único basado en la fecha actual
       name: taskName,
+      priority: taskPriority, // Agregamos la prioridad a la tarea
       completed: false // Por defecto, una tarea nueva no está completada
     }
     // COMENTARIO OBLIGATORIO: Usamos setTasks porque en React el estado es inmutable.
@@ -45,11 +47,35 @@ function App() {
     setTasks(updatedTasks)
   }
 
+  // NUEVO: Agrega esta función para limpiar todo
+  const clearTasks = () => {
+    setTasks([]) 
+  }
+
+  // Calculamos los contadores dinámicamente antes del return
+  const totalTasks = tasks.length
+  const completedTasks = tasks.filter(task => task.completed).length
+
   return (
     <div className="app-container">
       <h1>React Task Manager 📝</h1>
+      
+      {/* SECCIÓN DE CONTADORES Y BOTÓN LIMPIAR */}
+      <div className="task-stats">
+        <p>Total de tareas: {totalTasks}</p>
+        <p>Tareas completadas: {completedTasks}</p>
+        
+        {/* El botón solo se mostrará si el arreglo de tareas tiene elementos */}
+        {tasks.length > 0 && (
+          <button onClick={clearTasks}>Limpiar todas las tareas</button>
+        )}
+      </div>
+
+      {/* FORMULARIO */}
       {/* Pasamos la función addTask como 'prop' al formulario */}
       <TaskForm addTask={addTask} />
+      
+      {/* LISTA DE TAREAS */}
       {/* Pasamos las nuevas funciones como props a TaskList */}
       <TaskList tasks={tasks} deleteTask={deleteTask} toggleComplete={toggleComplete} />
     </div>
