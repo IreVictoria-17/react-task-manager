@@ -22,11 +22,12 @@ Una aplicación de lista de tareas construida con React y Vite.
 
 ## Respuestas de la Entrega Final
 
-**1. ¿Qué fue lo más difícil?**
-Lo más difícil fue entender el flujo de la información (las Props). Me costó un poco visualizar cómo el estado principal y las funciones viven en `App.jsx`, pero se deben enviar 'hacia abajo' pasando por `TaskList` hasta llegar finalmente a `TaskItem` donde el usuario realmente hace clic.
 
-**2. ¿Qué error entendiste mejor?**
-El error de 'Scope' (alcance de variables). Cuando metí por error las funciones de eliminar y completar DENTRO de las llaves de la función `addTask`. La terminal me decía que no estaban definidas en el `return`, y ahí entendí que si declaro algo dentro de unas llaves, se queda atrapado ahí y el resto del componente no puede verlo.
+**1. ¿Qué componente fue más fácil?**
+El componente `TaskItem` fue el más sencillo de construir. Su responsabilidad es muy clara: simplemente recibe los datos de la tarea individual y las funciones a través de las "props" y se encarga de mostrarlos en la interfaz. La lógica compleja no vive ahí, solo la estructura visual.
 
-**3. ¿Qué parte del código podrías explicar sin mirar apuntes?**
-Podría explicar cómo crear la estructura básica de un componente desde cero, la regla de que deben empezar en Mayúscula (PascalCase), y cómo importarlos y renderizarlos en `App.jsx` usando etiquetas como `<TaskForm />`.
+**2. ¿Qué componente fue más difícil?**
+Definitivamente el componente `App.jsx`. Al ser el "director de orquesta" de la aplicación, concentra la mayor parte de la lógica. Fue un reto manejar el "Scope" (alcance) de las funciones para no anidarlas incorrectamente, y aprender a usar Variables Derivadas para calcular los contadores y los filtros sin tener que crear múltiples estados innecesarios que pudieran desincronizarse.
+
+**3. ¿Dónde vive el estado principal y por qué?**
+El estado principal de la lista de tareas (`const [tasks, setTasks] = useState([])`) vive en el componente padre `App.jsx`. La razón de esto es aplicar el principio de "Levantamiento de Estado" (Lifting State Up) de React. Como dos componentes "hermanos" necesitan esta información (`TaskForm` necesita actualizar la lista y `TaskList` necesita leerla), el estado debe vivir en el ancestro común más cercano a ambos para poder pasar la información hacia abajo a través de "props".
