@@ -8,6 +8,8 @@ function App() {
   // COMENTARIO OBLIGATORIO: El estado principal vive aquí en App.jsx 
   // porque varios componentes hijos (TaskForm y TaskList) necesitan acceder a esta información.
   const [tasks, setTasks] = useState([])
+  // NUEVO: Estado para saber qué filtro está activo
+  const [filter, setFilter] = useState('todas')
 
   // Función para agregar una nueva tarea
   // NUEVO: Agrega 'taskPriority' como segundo parámetro
@@ -51,10 +53,17 @@ function App() {
   const clearTasks = () => {
     setTasks([]) 
   }
-
   // Calculamos los contadores dinámicamente antes del return
+  // --- VARIABLES DERIVADAS ---
   const totalTasks = tasks.length
   const completedTasks = tasks.filter(task => task.completed).length
+
+  // NUEVO: Calculamos qué tareas mostrar dependiendo del filtro activo
+  const filteredTasks = tasks.filter(task => {
+    if (filter === 'pendientes') return task.completed === false
+    if (filter === 'completadas') return task.completed === true
+    return true // Si es 'todas', retornamos todas
+  })
 
   return (
     <div className="app-container">
@@ -74,10 +83,17 @@ function App() {
       {/* FORMULARIO */}
       {/* Pasamos la función addTask como 'prop' al formulario */}
       <TaskForm addTask={addTask} />
+
+      {/* NUEVO: Botones para cambiar el estado del filtro */}
+      <div className="filters">
+        <button onClick={() => setFilter('todas')}>Todas</button>
+        <button onClick={() => setFilter('pendientes')}>Pendientes</button>
+        <button onClick={() => setFilter('completadas')}>Completadas</button>
+      </div>
       
       {/* LISTA DE TAREAS */}
       {/* Pasamos las nuevas funciones como props a TaskList */}
-      <TaskList tasks={tasks} deleteTask={deleteTask} toggleComplete={toggleComplete} />
+      <TaskList tasks={filteredTasks} deleteTask={deleteTask} toggleComplete={toggleComplete} />
     </div>
   )
 }
