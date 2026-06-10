@@ -1,23 +1,32 @@
 // src/components/TaskList.jsx
-import TaskItem from './TaskItem' // Importamos el componente hijo que representa cada tarea individual
+import TaskItem from './TaskItem'
 
-// Recibimos el arreglo de 'tasks' a través de las props
-// Agregamos deleteTask y toggleComplete a las props recibidas
+// COMENTARIO OBLIGATORIO: Recibe 'tasks' (arreglo ya filtrado), 'deleteTask' y 'toggleComplete' como props.
 function TaskList({ tasks, deleteTask, toggleComplete }) {
   
+  // REGLA OBLIGATORIA: Mensaje si no hay tareas visibles en el filtro actual
+  if (tasks.length === 0) {
+    return (
+      <div className="no-tasks-message">
+        <p>No hay tareas disponibles en este filtro. ¡Buen trabajo! 🎉</p>
+      </div>
+    )
+  }
+
   return (
     <div className="task-list">
       {/* COMENTARIO OBLIGATORIO: El método map() itera sobre el arreglo de 'tasks'. 
-          Por cada objeto de tarea en el arreglo, retorna (construye) un nuevo 
-          componente <TaskItem />. Es decir, transforma datos puros en elementos visuales. */}
+          Por cada objeto, retorna un componente <TaskItem /> transformando datos en elementos visuales. */}
       {tasks.map((task) => (
-        // Siempre que usamos map() en React, debemos pasar una prop especial llamada 'key' 
-        // con un valor único para que React sepa identificar qué elemento es cuál.
-        <TaskItem key={task.id} task={task} 
-        // Pasamos las funciones al componente hijo para que pueda usarlas en los botones de eliminar y completar
-        deleteTask={deleteTask} toggleComplete={toggleComplete} />
+        <TaskItem 
+          key={task.id} 
+          task={task} 
+          deleteTask={deleteTask} 
+          toggleComplete={toggleComplete} 
+        />
       ))}
     </div>
   )
 }
+
 export default TaskList
