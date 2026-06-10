@@ -6,6 +6,10 @@ import TaskForm from './components/TaskForm'
 // Importamos nuestros nuevos componentes atómicos
 import TaskStats from './components/TaskStats'
 import TaskFilters from './components/TaskFilters'
+// NUEVOS COMPONENTES PARA LA VERSIÓN PRO
+import TaskHeader from './components/TaskHeader'
+import TaskSearch from './components/TaskSearch'
+import TaskDashboard from './components/TaskDashboard'
 
 function App() {
   // COMENTARIO OBLIGATORIO: ¿Dónde vive el estado principal? Vive aquí en App.jsx.
@@ -14,6 +18,8 @@ function App() {
   // TaskForm necesita cambiar este estado para agregar tareas, y TaskList lo necesita para renderizarlas y modificarlas.
   const [tasks, setTasks] = useState([])
   const [filter, setFilter] = useState('todas')
+  // NUEVO ESTADO: Guarda el texto que el usuario escribe en la barra de búsqueda
+  const [searchQuery, setSearchQuery] = useState('')
 
   // COMENTARIO OBLIGATORIO: ¿Qué función agrega tareas? Es 'addTask'.
   // Recibe los datos controlados desde TaskForm y los inyecta en el estado inmutable usando el operador spread (...).
@@ -62,30 +68,53 @@ function App() {
   // Agregamos el contador de pendientes solicitado
   const pendingTasks = tasks.filter(task => !task.completed).length
 
-  // Filtrado de la lista antes de mandarla al componente de presentación TaskList
+  // NUEVO: FILTRADO COMBINADO (Filtro por estado + Filtro por barra de búsqueda)
   const filteredTasks = tasks.filter(task => {
-    if (filter === 'pendientes') return !task.completed
-    if (filter === 'completadas') return task.completed
-    return true
+    // 1. Primero verificamos el filtro de estado de completación
+    let matchesFilter = true
+    if (filter === 'pendientes') matchesFilter = !task.completed
+    if (filter === 'completadas') matchesFilter = task.completed
+
+    // 2. Luego verificamos si el nombre de la tarea incluye el texto buscado
+    // Convertimos ambos a minúsculas con .toLowerCase() para evitar problemas con las mayúsculas
+    const matchesSearch = task.name.toLowerCase().includes(searchQuery.toLowerCase())
+
+    // La tarea se muestra SOLO si cumple ambas condiciones (TRUE y TRUE)
+    return matchesFilter && matchesSearch
   })
+
+  // NUEVO REQUERIMIENTO: Total de tareas visibles actualmente en pantalla
+  const visibleTasksCount = filteredTasks.length
 
   return (
     <div className="app-container">
-      <h1>React Task Manager 📝</h1>
+      {/* Componente aislado para el título */}
+      <TaskHeader />
       
+      {/* COMPONENTE INTERMEDIO OBLIGATORIO: Envuelve la aplicación */}
+      <TaskDashboard> 
       {/* COMENTARIO OBLIGATORIO: ¿Qué componentes reciben props? TaskStats las recibe aquí.
         COMENTARIO OBLIGATORIO: ¿Qué componentes solo muestran información? TaskStats es principalmente de visualización,
         aunque incluye la acción del botón para limpiar completadas.
       */}
+
+      {/* Pasamos los contadores normales y el nuevo contador de tareas visibles */}
       <TaskStats 
         totalTasks={totalTasks} 
         completedTasks={completedTasks} 
         pendingTasks={pendingTasks}
+        visibleTasksCount={visibleTasksCount}
         clearCompletedTasks={clearCompletedTasks}
       />
 
       {/* Formulario para agregar tareas */}
       <TaskForm addTask={addTask} />
+
+      {/* NUEVO COMPONENTE: Barra de búsqueda conectada a su estado y set_modificador */}
+        <TaskSearch 
+          searchQuery={searchQuery} 
+          setSearchQuery={setSearchQuery} 
+        />
 
       {/* Componente extraído para manejar el estado visual de los filtros */}
       <TaskFilters 
@@ -101,6 +130,7 @@ function App() {
         deleteTask={deleteTask} 
         toggleComplete={toggleComplete} 
       />
+      </TaskDashboard>
     </div>
   )
 }

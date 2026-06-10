@@ -1,11 +1,11 @@
 // src/components/TaskForm.jsx
 import { useState } from 'react'
 
-// Recibimos la función addTask a través de las props
+// COMENTARIO OBLIGATORIO: Este componente recibe la prop 'addTask' desde el padre (App.jsx).
+// COMENTARIO OBLIGATORIO: Maneja sus propios estados locales internos (inputs controlados) 
+// para el texto y la prioridad antes de enviarlos.
 function TaskForm({ addTask }) {
-  // Estado local para controlar lo que el usuario escribe en el input
   const [inputValue, setInputValue] = useState("")
-  // NUEVO: Agrega este estado justo debajo del anterior
   const [priority, setPriority] = useState("baja")
 
   const handleSubmit = (e) => {
@@ -14,17 +14,14 @@ function TaskForm({ addTask }) {
     // REGLA DE LA TAREA: Evitar tareas vacías
     if (inputValue.trim() === "") {
       alert("La tarea no puede estar vacía")
-      return // Detenemos la ejecución si está vacío
+      return // Detenemos la ejecución de la función
     }
 
-    addTask(inputValue) // Enviamos el texto a la función de App.jsx
-    setInputValue("") // Limpiamos el input después de agregar la tarea
-
-    // NUEVO: Modifica esta línea para enviar la prioridad también
+    // SOLUCIÓN AL BUG: Llamamos a la función una Sola vez pasando ambos valores
     addTask(inputValue, priority) 
 
+    // Reseteamos todos los estados locales de forma limpia
     setInputValue("")
-    // NUEVO: Resetea el selector a 'baja' después de agregar
     setPriority("baja")
   }
 
@@ -33,10 +30,11 @@ function TaskForm({ addTask }) {
       <input
         type="text"
         placeholder="Escribe una nueva tarea..."
-        value={inputValue} // El valor del input es el estado
-        onChange={(e) => setInputValue(e.target.value)} // Actualizamos el estado al escribir
+        value={inputValue} // Input controlado
+        onChange={(e) => setInputValue(e.target.value)} 
       />
-      {/* NUEVO: Agrega este bloque <select> justo debajo del <input> y antes del <button> */}
+      
+      {/* Selector de prioridad */}
       <select 
         value={priority} 
         onChange={(e) => setPriority(e.target.value)}
@@ -45,6 +43,7 @@ function TaskForm({ addTask }) {
         <option value="media">Media</option>
         <option value="alta">Alta</option>
       </select>
+      
       <button type="submit">Agregar</button>
     </form>
   )
