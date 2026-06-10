@@ -4,11 +4,11 @@ import TaskItem from './TaskItem'
 // COMENTARIO OBLIGATORIO: Recibe 'tasks' (arreglo ya filtrado), 'deleteTask' y 'toggleComplete' como props.
 function TaskList({ tasks, deleteTask, toggleComplete }) {
   
-  // REGLA OBLIGATORIA: Mensaje si no hay tareas visibles en el filtro actual
+  // REGLA OPTIMIZADA: Mensaje adaptado si no hay resultados visibles por filtros o búsqueda
   if (tasks.length === 0) {
     return (
       <div className="no-tasks-message">
-        <p>No hay tareas disponibles en este filtro. ¡Buen trabajo! 🎉</p>
+        <p>No se encontraron tareas que coincidan con la búsqueda o el filtro seleccionado. 🔍❌</p>
       </div>
     )
   }
